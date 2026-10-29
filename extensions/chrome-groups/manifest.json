@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "BrowserPet 分组助手",
+  "version": "0.2.0",
+  "description": "只读同步 Chrome 原有标签组到本机 BrowserPet。无网页注入、无网络请求、无痕禁用。",
+  "minimum_chrome_version": "105",
+  "permissions": [
+    "tabGroups",
+    "nativeMessaging"
+  ],
+  "incognito": "not_allowed",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "BrowserPet：同步原有分组"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtedwAwm/QAoqyOBRnXoks3JKab4XZHaWcHLwykZGDPyzL4bPx8/8bSGUrmqDKFWC2FF+1O4n/sgcewd+lFO4PObyhgY47g1sT7GmkIOQvi9TA75Thbzrb3WMAHSNEa1yQyyNeC+oy+L7pcXb1G3nClToUxCyLV2D5gy9vlcPm+xz7RWed/1cB+EWzrmf5l8GU7l9usGh0JSV9xYU2mPyvNXREE7tJFGzCuNJ4kWjIkF4WhsWEVPXo/7S1Y3VtpKg/ho6icSg6Hesww8qenpiuOo4RpRFedsDaD9ivC+NmSFwz/M2K89E6Xg9s3Q2LRn9EtuN42/citXIP6HQuY0McwIDAQAB"
+}

@@ -1,0 +1,25 @@
+BrowserPet 0.3.2 — Mac 桌宠找页工具
+
+系统要求：Apple Silicon（arm64），macOS 13 或更高；Safari 接入要求 Safari 18.4 或更高。
+此个人测试版采用 ad-hoc 签名，未使用 Developer ID 签名、未经 Apple 公证。
+首次下载后 macOS 可能阻止启动，或需要你在系统设置中审查打开许可。
+若组织策略不允许，使用源码自行构建；请勿关闭系统安全防护。
+
+安装：将 BrowserPet.app 拖到 Applications，再从“应用程序”打开。
+使用：点击桌宠小猫，或按 Control + Option + Space。搜索后上下选择，Enter 切换，Esc 收起。
+右键猫可隐藏、设置或退出；隐藏后菜单栏爪印和快捷键仍可用。
+
+Chrome / Edge：运行浏览器后，按 macOS 提示授予自动化权限。
+基础搜索、切换不需要扩展。Edge 已实现但当前发布未做实机验收。
+Chrome 原有分组：在面板点击“连接原分组”，注册本机连接并打开助手文件夹；
+在 Chrome 扩展页开启开发者模式并“加载已解压的扩展”。每个 Profile 分别加载。
+应用移动后需重新注册；建议先安装到“应用程序”再连接。
+
+Safari：在面板点击“Safari 连接”，生成并打开本用户的 SafariHelper 文件夹。
+在 Safari 设置的开发者选项中“添加临时扩展”，选择该文件夹，按系统提示授予网站访问权限。
+不要开启隐私浏览访问。临时扩展在退出 Safari 或 24 小时后需重新加载。
+密钥与助手配置仅在本机生成；不要分享 Library/Application Support/BrowserPet 文件夹。
+
+页面数据只在内存处理，不读取正文、历史或书签，不向外网发送。
+无痕默认排除；分组只影响面板展示，不移动浏览器页面。
+完整说明与源码：https://github.com/kudoushinichiYu/BrowserPet

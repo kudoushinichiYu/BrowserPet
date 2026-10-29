@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+<key>CFBundleExecutable</key><string>BrowserPet</string>
+<key>CFBundleIdentifier</key><string>local.browserpet.app</string>
+<key>CFBundleName</key><string>BrowserPet</string>
+<key>CFBundleDisplayName</key><string>BrowserPet</string>
+<key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>0.3.2</string>
+  <key>CFBundleVersion</key><string>6</string>
+<key>LSMinimumSystemVersion</key><string>13.0</string>
+<key>LSUIElement</key><true/>
+<key>NSHighResolutionCapable</key><true/>
+<key>NSAppleEventsUsageDescription</key><string>BrowserPet 需要读取 Chrome 和 Edge 普通窗口中已打开页面的标题和网址，并在你选择后切换到原标签页。数据仅在本机内存中处理，隐私窗口排除。Safari 使用本机配套助手。</string>
+</dict></plist>

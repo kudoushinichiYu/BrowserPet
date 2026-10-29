@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "BrowserPet Safari 页面助手",
+  "version": "0.3.1",
+  "description": "在本机汇总普通窗口的标题和网址，并按你的选择切回原标签页。",
+  "permissions": ["tabs", "storage", "http://*/*", "https://*/*"],
+  "incognito": "not_allowed",
+  "background": {"scripts": ["config.js", "protocol.js", "background.js"], "persistent": true},
+  "browser_action": {"default_title": "BrowserPet Safari 连接"},
+  "browser_specific_settings": {"safari": {"strict_min_version": "18.4"}},
+  "content_security_policy": "script-src 'self'; object-src 'none'; connect-src http://127.0.0.1:49731"
+}
