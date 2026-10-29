@@ -1,0 +1,208 @@
+Sources/BrowserPet/ChromeAdapter.swift
+  s_f5bf42c83024ee::t_fcdfa22395ff7d 15-24,64,100,159
+  s_f5bf42c83024ee::t_b2e96430535f49 26-28,31-33,37,59,66,68,73-75,82,86,88,92-95,104,109,119-122,124-128
+  s_f5bf42c83024ee::t_d86c0e5d809343 45-54,78,90-91
+  s_f5bf42c83024ee::t_e1e42e60247c56 65
+  s_f5bf42c83024ee::t_568e0579742bfd 1-14,25,62-63,67,69-72,76,79-81,83,89,96-99,106-108,112-118,123,129-158,160-176
+  s_f5bf42c83024ee::t_71ecb847ba0cd2 30,34-36,40-44,55,57-58,77,85,101-103
+  s_f5bf42c83024ee::t_ee88e8657b0cc6 110-111
+  s_f5bf42c83024ee::t_10f7451f2c2bfc 29,38-39,60
+  s_f5bf42c83024ee::t_745c27a8e44df1 61,84,87,105
+  s_f5bf42c83024ee::t_6e787fa7caf780 56
+docs/VALIDATION.md
+  s_f5bf42c83024ee::t_14219444170e11 1-22
+Sources/BrowserPet/main.swift
+  s_f5bf42c83024ee::t_acf7f580c8674c 3-10
+  s_f5bf42c83024ee::t_2843e4e69b8674 1-2
+Sources/BrowserPet/HoverTitleView.swift
+  s_f5bf42c83024ee::t_5af93994e115f2 40-46
+  s_f5bf42c83024ee::t_058aede04e477b 1-31,34-36,38-39,47-58,60-71,73-96
+  s_f5bf42c83024ee::t_ad5f6f56ea1a41 32-33,37,59,72
+Resources/chrome-scan.js
+  s_f5bf42c83024ee::t_406e0faaa06f71 17-19,22,24-25,33-34
+  s_f5bf42c83024ee::t_7c5816f1c3169a 26-32
+  s_f5bf42c83024ee::t_568e0579742bfd 1-16,20-21,23,35-46
+Resources/Entitlements.plist
+  s_f5bf42c83024ee::t_720d780f718560 1-5
+Resources/pet-atlas-provenance.json
+  s_f5bf42c83024ee::t_189e0962424630 40-42
+  s_f5bf42c83024ee::t_3d26a84c3d28fd 1-39,43
+Sources/BrowserPet/HotKey.swift
+  s_f5bf42c83024ee::t_0c099d3c63f9cd 1-33,35-38,40-51,53-56,58-67
+  s_f5bf42c83024ee::t_7a71e3bf8cd405 34,39,52,57
+Sources/BrowserPet/SafariLoopback.swift
+  s_f5bf42c83024ee::t_7592717103f461 1-7,9-98
+  s_f5bf42c83024ee::t_842542c93cbac2 8
+Resources/group-native-host
+  s_f5bf42c83024ee::t_80d3487b204459 1-3
+scripts/map-pet-atlas.py
+  s_f5bf42c83024ee::t_89bdca1c6a9eb3 1-51
+Tests/CoreChecks.swift
+  s_f5bf42c83024ee::t_1436314c4df090 42-72
+  s_f5bf42c83024ee::t_10f7451f2c2bfc 35-41
+  s_f5bf42c83024ee::t_71aba58201636f 1-34,73-75
+.gitignore
+  s_f5bf42c83024ee::t_842542c93cbac2 5-6
+  s_f5bf42c83024ee::t_720d780f718560 1-4
+extensions/chrome-groups/manifest.json
+  s_f5bf42c83024ee::t_737a1eb15c2919 13-14
+  s_f5bf42c83024ee::t_8e16a991755cea 1-12,15-20
+Sources/BrowserPet/SearchPanel.swift
+  s_f5bf42c83024ee::t_058aede04e477b 24,31,35-36,41-49,58-59,300
+  s_f5bf42c83024ee::t_f64953b19c1442 17,65-70,234-238
+  s_f5bf42c83024ee::t_0f71b538ce742b 50,60-64,71,84-85,106,132,147-157,171,212,220-222,255-256,336-337
+  s_f5bf42c83024ee::t_252c56d9bc8cd2 79-80,109-110
+  s_f5bf42c83024ee::t_5af93994e115f2 54-56,96-97,194,269-273,276-290
+  s_f5bf42c83024ee::t_4b5c242c15128d 202,211,214,242-243,331
+  s_f5bf42c83024ee::t_92119b33905047 7-16,18-21,98-99,196,204-207,209-210,216-219,227-233,239-241,244,248-252,261-262
+  s_f5bf42c83024ee::t_dec7b9e7562244 1-6,22-23,30,32,38,51-52,72-74,77-78,91,95,108,112,114,117-118,120-121,123-124,127,168-169,184-193,195,197,203,213,247,254,258-259,264-267,275,291-292,296,304,306,318,321-322,325,328-329,333-334,338
+  s_f5bf42c83024ee::t_52ecf0ca64c6b9 25-29,33-34,37,39-40,53,57,75-76,81-83,86-90,92-94,100-105,107,111,113,115-116,119,122,125-126,128-131,133-146,158-167,170,172-183,198-201,208,215,223-226,245-246,253,257,260,263,268,274,293-295,297-299,301-303,305,307-317,319-320,323-324,326-327,330,332,335
+Tests/group-extension.test.mjs
+  s_f5bf42c83024ee::t_1436314c4df090 1-19
+Resources/group-bridge-config.json
+  s_f5bf42c83024ee::t_8e16a991755cea 1-5
+Sources/BrowserPet/PetAtlas.swift
+  s_f5bf42c83024ee::t_89bdca1c6a9eb3 1-56,59-105
+  s_f5bf42c83024ee::t_8512e2bbd4cf44 57-58
+extensions/safari-tabs/manifest.json
+  s_f5bf42c83024ee::t_dd95317ff8cd1a 4
+  s_f5bf42c83024ee::t_53afb3d20c3e5c 1-3,5-12
+Resources/chrome-activate.js
+  s_f5bf42c83024ee::t_ee88e8657b0cc6 1,4,9,14,22
+  s_f5bf42c83024ee::t_568e0579742bfd 2-3,5-8,10-13,15-21,23-28
+Resources/pet-atlas-frames.json
+  s_f5bf42c83024ee::t_8c14af6529357a 1-478
+Sources/BrowserPet/SafariAdapter.swift
+  s_f5bf42c83024ee::t_7ec50bf2178fae 9,16,42,65,67,77-78
+  s_f5bf42c83024ee::t_fcdfa22395ff7d 1-8,10-15,17-32,34-38,40-41,44-64,66,68-76,79-91,93-95
+  s_f5bf42c83024ee::t_e1e42e60247c56 33,39,43,92
+README.md
+  s_f5bf42c83024ee::t_07894931d989e9 38,40,46,48,50,54,56,58
+  s_f5bf42c83024ee::t_14219444170e11 3,5-11,13-17,19,21,23,25,27,29-31,33,35,37,39,41,43-45,47,49,51,53,55,57,59,61-66,68-69,73,75,77-79,81,83,85,87-94,96
+  s_f5bf42c83024ee::t_0f0bc4babdb3d1 24,26,28,32,34,36
+  s_f5bf42c83024ee::t_afade3efdcb740 42
+  s_f5bf42c83024ee::t_b82d5ad76d5930 80
+  s_f5bf42c83024ee::t_8fc91d22f9d7fb 52
+  s_f5bf42c83024ee::t_87770193d8784c 1-2,4,12,18,20,22,60,67,70-72,74,76,82,84,86,95
+Tests/PetAtlasChecks.swift
+  s_f5bf42c83024ee::t_8512e2bbd4cf44 1-73
+Sources/BrowserPet/MultiBrowserAdapter.swift
+  s_f5bf42c83024ee::t_e1e42e60247c56 4-6,8-11,19,28
+  s_f5bf42c83024ee::t_fcdfa22395ff7d 1-3,7,12-18,20-27,29-52
+extensions/safari-tabs/protocol.js
+  s_f5bf42c83024ee::t_dd95317ff8cd1a 6,10,12-15,20-21,30,35
+  s_f5bf42c83024ee::t_53afb3d20c3e5c 1-5,7-9,11,16-19,22-29,31-34,36-40
+docs/releases/v0.3.2.md
+  s_f5bf42c83024ee::t_14219444170e11 1-25
+extensions/chrome-groups/snapshot.mjs
+  s_f5bf42c83024ee::t_80d3487b204459 1-12
+Sources/BrowserPet/Core.swift
+  s_f5bf42c83024ee::t_6f813e56097d5d 19,36-47,51-54,60-71,74-80,94-102,104,118-119,124-128,130-131
+  s_f5bf42c83024ee::t_745c27a8e44df1 18
+  s_f5bf42c83024ee::t_720d780f718560 1-2,9-17,20,23-35,48-50,55-59,72-73,81-84,87-93,103,105-106,109-117,120-123,132-142,150-158,160-170,183-192
+  s_f5bf42c83024ee::t_6df0ebde85b17c 3-8,21-22,85-86,107-108,129,143-149,159
+  s_f5bf42c83024ee::t_10f7451f2c2bfc 171-182
+Tests/BridgeChecks.swift
+  s_f5bf42c83024ee::t_06aaecbbb564b8 10
+  s_f5bf42c83024ee::t_1436314c4df090 1-9,11-36
+Sources/BrowserPet/GroupModel.swift
+  s_f5bf42c83024ee::t_51fdb1c3ef3cf9 1-9,11-16,18-19,22-40,42-52
+  s_f5bf42c83024ee::t_9c8f6a46e96491 10,17,41
+  s_f5bf42c83024ee::t_1436314c4df090 20-21
+Resources/Info.plist
+  s_f5bf42c83024ee::t_720d780f718560 1-8,11-13,15
+  s_f5bf42c83024ee::t_92119b33905047 9-10
+  s_f5bf42c83024ee::t_0f71b538ce742b 14
+Sources/BrowserPet/SettingsController.swift
+  s_f5bf42c83024ee::t_7a71e3bf8cd405 68
+  s_f5bf42c83024ee::t_2843e4e69b8674 1-67,69-94
+scripts/test.sh
+  s_f5bf42c83024ee::t_71aba58201636f 1,3-5,7,12
+  s_f5bf42c83024ee::t_8512e2bbd4cf44 21-23
+  s_f5bf42c83024ee::t_1436314c4df090 6,13,20,24-25
+  s_f5bf42c83024ee::t_842542c93cbac2 17
+  s_f5bf42c83024ee::t_11534167eb1556 14-16,18-19
+  s_f5bf42c83024ee::t_06aaecbbb564b8 2
+  s_f5bf42c83024ee::t_252c56d9bc8cd2 8-11
+extensions/safari-tabs/background.js
+  s_f5bf42c83024ee::t_53afb3d20c3e5c 1-5,7,10-29,31-40
+  s_f5bf42c83024ee::t_dd95317ff8cd1a 6,8-9,30
+Sources/BrowserPet/GroupBridge.swift
+  s_f5bf42c83024ee::t_51fdb1c3ef3cf9 1-146
+scripts/prepare-safari-helper.py
+  s_f5bf42c83024ee::t_53afb3d20c3e5c 1-28
+scripts/build.sh
+  s_f5bf42c83024ee::t_06aaecbbb564b8 2
+  s_f5bf42c83024ee::t_53afb3d20c3e5c 16
+  s_f5bf42c83024ee::t_842542c93cbac2 4-6,17-23
+  s_f5bf42c83024ee::t_2843e4e69b8674 1,3,11-14,28-30
+  s_f5bf42c83024ee::t_3b3a3b58095508 10
+  s_f5bf42c83024ee::t_80d3487b204459 24-25
+  s_f5bf42c83024ee::t_acf7f580c8674c 26-27
+  s_f5bf42c83024ee::t_d86c0e5d809343 7-9
+  s_f5bf42c83024ee::t_89bdca1c6a9eb3 15
+Sources/BrowserPet/AppDelegate.swift
+  s_f5bf42c83024ee::t_ee88e8657b0cc6 241,249
+  s_f5bf42c83024ee::t_842542c93cbac2 267,270-274,284-285,287-290,292-294
+  s_f5bf42c83024ee::t_acf7f580c8674c 26-27,49,51-57,161,170,276-283,286,291,310
+  s_f5bf42c83024ee::t_5af93994e115f2 146
+  s_f5bf42c83024ee::t_2843e4e69b8674 1-19,21-23,25,31-33,42-48,58-97,99-109,111-131,135-145,148-160,162-169,171,173-177,180-188,194-196,203-204,208,210-219,224-227,229-230,238-240,242,244,246-247,250-257,260-262,295-309,313-320,323-326
+  s_f5bf42c83024ee::t_92119b33905047 178-179
+  s_f5bf42c83024ee::t_7c5816f1c3169a 20,147,205-207,209,220-223
+  s_f5bf42c83024ee::t_8fc91d22f9d7fb 321-322
+  s_f5bf42c83024ee::t_0f71b538ce742b 24,28-30,34-41,50,98,110,132-134,172,189-193,197-202,228,231-237,243,245,248,258-259,263-266,268-269,275,311-312
+scripts/register-group-host.py
+  s_f5bf42c83024ee::t_80d3487b204459 1-33
+Tests/safari-extension.test.js
+  s_f5bf42c83024ee::t_dd95317ff8cd1a 23-30
+  s_f5bf42c83024ee::t_325c3ff7d7b745 1-22,31-61
+Tests/MultiBrowserChecks.swift
+  s_f5bf42c83024ee::t_dfb5795070eb2e 131-133
+  s_f5bf42c83024ee::t_325c3ff7d7b745 1-11,24-29,71-115,137-139
+  s_f5bf42c83024ee::t_b9824f2bd0d571 30-41,43,46-51,54-64,66-69
+  s_f5bf42c83024ee::t_3b3a3b58095508 44-45,52-53,65,70
+  s_f5bf42c83024ee::t_11534167eb1556 12-23,116-130,134-136
+  s_f5bf42c83024ee::t_9011244df35ab6 42
+Tests/SearchRefreshChecks.swift
+  s_f5bf42c83024ee::t_82a9685ef838d9 14
+  s_f5bf42c83024ee::t_252c56d9bc8cd2 1-13,15-50
+Package.swift
+  s_f5bf42c83024ee::t_720d780f718560 1-8,10-11
+  s_f5bf42c83024ee::t_71aba58201636f 9
+Tests/chrome-scripts.test.js
+  s_f5bf42c83024ee::t_7c5816f1c3169a 10
+  s_f5bf42c83024ee::t_ee88e8657b0cc6 1-9,11-60
+Sources/BrowserPet/LocalSetup.swift
+  s_f5bf42c83024ee::t_b9824f2bd0d571 16,33
+  s_f5bf42c83024ee::t_842542c93cbac2 1-15,17-32,34-69
+Sources/BrowserPet/PetView.swift
+  s_f5bf42c83024ee::t_fe037b849da36b 34,41
+  s_f5bf42c83024ee::t_0f71b538ce742b 33
+  s_f5bf42c83024ee::t_0c099d3c63f9cd 1-8,10-32,35-40,42-43,45-106
+  s_f5bf42c83024ee::t_89bdca1c6a9eb3 9
+  s_f5bf42c83024ee::t_e181b75107834c 44
+extensions/chrome-groups/background.js
+  s_f5bf42c83024ee::t_80d3487b204459 1-41
+docs/INSTALL.zh-CN.txt
+  s_f5bf42c83024ee::t_ce95a20c867b4b 1-25
+scripts/package-dmg.sh
+  s_f5bf42c83024ee::t_7b5c6c852fa178 1-31
+scripts/verify-release.py
+  s_f5bf42c83024ee::t_f6b8a7115ea32d 1-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "a2e8f29dfda08e6622aa7f68f7f0c1ca28f1a42f",
+  "prompts": {},
+  "sessions": {
+    "s_f5bf42c83024ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a185b4-19a7-7953-a6da-b3485b25780a",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "KudoushinichiYu <170847496+kudoushinichiYu@users.noreply.github.com>"
+    }
+  }
+}
