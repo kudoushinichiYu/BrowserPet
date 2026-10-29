@@ -1,0 +1,11 @@
+{
+  "generator": "Codex built-in image_gen",
+  "model": "not verified",
+  "source": "original BrowserPet logo",
+  "file": "AppIcon.png",
+  "width": 1254,
+  "height": 1254,
+  "alpha": true,
+  "prompt": "Use case: logo-brand. Asset type: final macOS application icon for BrowserPet, an original desktop cat companion that finds and switches between browser tabs. Create ONE polished 1024x1024 square app icon, not a presentation, mockup or options sheet. Subject: a friendly original gray-and-white kitten face and upper paws, large dark expressive eyes, soft pink inner ears and tiny pink nose, white muzzle and forehead blaze, subtle gray forehead patch, simple clean warm dark outlines; rounded proportions, pleasant calm alert expression. Integrate one compact, clearly readable browser-tab silhouette behind the kitten's head so the cat seems to peek out of a browser page; keep the tab symbol generic, with no browser company logo. Composition: bold centered silhouette, fills a soft rounded-square macOS icon tile with generous safe padding; softly lit muted blue tile, white browser shape, friendly premium native utility appearance. Style: crisp simplified illustrated logo with restrained soft depth and clean edges; highly legible at 16, 32 and 64 pixels, minimal details. Transparent background outside the rounded-square tile, preserve true alpha. No text, no letters, no numbers, no magnifying glass, no extra cats, no scene, no surrounding frame or mockup, no watermark.",
+  "packaging": "Original PNG preserved. scripts/build-icon.sh uses macOS sips and iconutil to create standard 16–1024 pixel ICNS representations. ICNS reused as the DMG volume icon."
+}

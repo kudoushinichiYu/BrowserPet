@@ -11,6 +11,7 @@ xcrun swiftc "${diagnostic_flags[@]}" -swift-version 5 -O -target arm64-apple-ma
   -module-cache-path "$PWD/.build/module-cache" Sources/BrowserPet/*.swift \
   -o "$app_bundle/Contents/MacOS/BrowserPet"
 cp Resources/Info.plist "$app_bundle/Contents/Info.plist"
+./scripts/build-icon.sh "$app_bundle/Contents/Resources/AppIcon.icns"
 cp Resources/*.js Resources/pet-atlas.png "$app_bundle/Contents/Resources/"
 cp Resources/group-bridge-config.json Resources/pet-atlas-frames.json "$app_bundle/Contents/Resources/"
 mkdir -p "$app_bundle/Contents/Resources/safari-tabs"

@@ -1,4 +1,4 @@
-BrowserPet 0.3.2 — Mac 桌宠找页工具
+BrowserPet 0.3.3 — Mac 桌宠找页工具
 
 系统要求：Apple Silicon（arm64），macOS 13 或更高；Safari 接入要求 Safari 18.4 或更高。
 此个人测试版采用 ad-hoc 签名，未使用 Developer ID 签名、未经 Apple 公证。

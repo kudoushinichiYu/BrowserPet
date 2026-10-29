@@ -13,6 +13,9 @@ info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
 expected = plistlib.loads((root / 'Resources/Info.plist').read_bytes())
 assert info['CFBundleShortVersionString'] == expected['CFBundleShortVersionString']
 assert info['LSMinimumSystemVersion'] == '13.0'
+assert info['CFBundleIconFile'] == 'AppIcon.icns'
+icon = resources / info['CFBundleIconFile']
+assert icon.read_bytes()[:4] == b'icns', 'Invalid application icon'
 assert subprocess.check_output(['lipo', '-archs', str(app / 'Contents/MacOS/BrowserPet')], text=True).strip() == 'arm64'
 subprocess.run(['codesign', '--verify', '--strict', str(app)], check=True)
 assert not (resources / 'safari-bridge-config.json').exists(), 'Bundled pairing secret'

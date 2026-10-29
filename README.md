@@ -1,8 +1,10 @@
 # BrowserPet
 
+<img src="Resources/AppIcon.png" width="112" alt="BrowserPet 应用图标">
+
 Mac 桌宠找页工具。点击小猫或按 **Control + Option + Space**，搜索 Chrome、Safari、Edge 当前打开的页面，一键切回原标签页。
 
-[下载 macOS 安装包](https://github.com/kudoushinichiYu/BrowserPet/releases/latest) · [版本说明](docs/releases/v0.3.2.md)
+[下载 macOS 安装包](https://github.com/kudoushinichiYu/BrowserPet/releases/latest) · [版本说明](docs/releases/v0.3.3.md)
 
 ## 安装与使用
 
@@ -78,7 +80,7 @@ open build/BrowserPet.app
 ./scripts/package-dmg.sh
 ```
 
-该命令构建无预置密钥的 Release 应用，生成 `dist/BrowserPet-<版本>-macOS-arm64.dmg` 和 SHA-256 校验文件，再验证镜像、挂载内容、签名、架构及个人路径/密钥未打入包。签名为 ad-hoc，不包含公证步骤。临时构建目录自动清理，产物与本地验收材料不提交到 Git。
+该命令构建无预置密钥的 Release 应用，生成 `dist/BrowserPet-<版本>-macOS-arm64.dmg` 和 SHA-256 校验文件，再验证镜像、挂载内容、签名、架构、应用/磁盘图标及个人路径/密钥未打入包。签名为 ad-hoc，不包含公证步骤。临时构建目录自动清理，产物与本地验收材料不提交到 Git。
 
 ## 验证与代码
 
@@ -94,3 +96,5 @@ open build/BrowserPet.app
 - `HotKey.swift`、`SettingsController.swift`、`AppDelegate.swift`：快捷键、登录项、菜单栏和生命周期。
 
 猫图集由 Codex 内置 image gen 生成，[来源与提示词](Resources/pet-atlas-provenance.json)保留生成记录；具体底层模型未核实。原 PNG 不改动，使用逐猫边界、主体隔离及统一透明画布处理全部 69 帧。重算边界的 `scripts/map-pet-atlas.py` 另需 Pillow，正常构建不需要。
+
+应用图标也由内置 image gen 生成：[原始 PNG](Resources/AppIcon.png)、[提示词与来源](Resources/app-icon-provenance.json)。构建时生成 16–1024 像素的标准 ICNS，应用和 DMG 卷共用同一图标。图标不改变 Apple 对签名与公证的要求。
