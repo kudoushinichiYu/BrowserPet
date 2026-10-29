@@ -1,0 +1,38 @@
+Resources/Info.plist
+  s_f5bf42c83024ee::t_ecd53f911d600d 9-11
+README.md
+  s_f5bf42c83024ee::t_475c7aecf72167 3-4,99-100
+  s_f5bf42c83024ee::t_ac727a64170e6a 7,83
+docs/VALIDATION.md
+  s_f5bf42c83024ee::t_475c7aecf72167 1-3
+scripts/build.sh
+  s_f5bf42c83024ee::t_ecd53f911d600d 14
+scripts/verify-release.py
+  s_f5bf42c83024ee::t_ecd53f911d600d 16-18
+docs/releases/v0.3.3.md
+  s_f5bf42c83024ee::t_475c7aecf72167 1-18
+scripts/build-icon.sh
+  s_f5bf42c83024ee::t_ecd53f911d600d 1-16
+scripts/package-dmg.sh
+  s_f5bf42c83024ee::t_ecd53f911d600d 19,21,23-29,35-36
+Resources/app-icon-provenance.json
+  s_f5bf42c83024ee::t_cab25280e05581 1-11
+docs/INSTALL.zh-CN.txt
+  s_f5bf42c83024ee::t_ac727a64170e6a 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "1fc027855ac6d6d69e55f3ef3d8969865671ca9e",
+  "prompts": {},
+  "sessions": {
+    "s_f5bf42c83024ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a185b4-19a7-7953-a6da-b3485b25780a",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "KudoushinichiYu <170847496+kudoushinichiYu@users.noreply.github.com>"
+    }
+  }
+}
