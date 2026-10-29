@@ -23,7 +23,7 @@ async function sync() {
     reply=null;
     if (data.command) {
       const command=data.command;
-      reply=completed.get(command.id) || await BrowserPetSafari.activate(api,command,instanceID);
+      reply=completed.get(command.id) || await BrowserPetSafari.perform(api,command,instanceID);
       completed.set(command.id,reply);
       if (completed.size>32) completed.delete(completed.keys().next().value);
     }

@@ -3,6 +3,13 @@ import AppKit
 protocol BrowserAdapter {
     func scan(completion: @escaping (Result<BrowserSnapshot, BrowserFailure>) -> Void)
     func activate(_ tab: BrowserTab, completion: @escaping (Result<Void, BrowserFailure>) -> Void)
+    func close(_ tab:BrowserTab,completion:@escaping (Result<Void,BrowserFailure>)->Void)
+    func reopen(_ tab:BrowserTab,completion:@escaping (Result<BrowserTab,BrowserFailure>)->Void)
+}
+
+extension BrowserAdapter {
+    func close(_ tab:BrowserTab,completion:@escaping (Result<Void,BrowserFailure>)->Void) { completion(.failure(.init(kind:.unknown,message:"此来源尚不支持关闭页面。"))) }
+    func reopen(_ tab:BrowserTab,completion:@escaping (Result<BrowserTab,BrowserFailure>)->Void) { completion(.failure(.init(kind:.unknown,message:"此来源尚不支持恢复页面。"))) }
 }
 
 enum AppResources {
@@ -124,6 +131,54 @@ final class ChromeAdapter: BrowserAdapter {
     }
 
     func retryPermissions() { denied = false }
+    private struct WorkspaceReply:Decodable { var status:String;var windowID:String?;var tabID:String?;var verified:Bool?;var errorCode:Int? }
+    func close(_ tab:BrowserTab,completion:@escaping (Result<Void,BrowserFailure>)->Void) {
+        guard tab.browser == browser.rawValue,tab.browserSession == chromeSession() else { completion(.failure(.closed));return }
+        workspaceScript("close",tab:tab) { result in
+            completion(result.flatMap { reply in reply.status == "removed" ? .success(()) : .failure(.init(kind:.closed,message:"页面已变化、已固定或无法确认关闭，工作集已保留。")) })
+        }
+    }
+    func reopen(_ tab:BrowserTab,completion:@escaping (Result<BrowserTab,BrowserFailure>)->Void) {
+        guard tab.browser == browser.rawValue,WorkspaceStore.canSave(tab) else { completion(.failure(.closed));return }
+        guard let app = NSWorkspace.shared.urlForApplication(withBundleIdentifier:browser.bundleID) else {
+            completion(.failure(.init(kind:.notInstalled,message:"未找到 \(browser.name)。")));return
+        }
+        func perform() {
+            let session = self.chromeSession()
+            var target = tab
+            if target.browserSession != session { target.windowID = "" }
+            self.workspaceScript("reopen",tab:target) { result in
+                completion(result.flatMap { reply in
+                    guard reply.status == "opened",reply.verified == true,let window = reply.windowID,let id = reply.tabID else { return .failure(.init(kind:.unknown,message:"未能确认新页面（\(reply.status)），先刷新再重试，避免重复打开。")) }
+                    var opened = tab;opened.windowID = window;opened.tabID = id;opened.browserSession = session;opened.pinned = false
+                    return .success(opened)
+                })
+            }
+        }
+        if NSRunningApplication.runningApplications(withBundleIdentifier:browser.bundleID).isEmpty {
+            let config = NSWorkspace.OpenConfiguration();config.activates = false
+            NSWorkspace.shared.openApplication(at:app,configuration:config) { _,error in
+                DispatchQueue.main.async { if error != nil { completion(.failure(self.failure(nil))) } else { perform() } }
+            }
+        } else { perform() }
+    }
+    private func workspaceScript(_ operation:String,tab:BrowserTab,completion:@escaping (Result<WorkspaceReply,BrowserFailure>)->Void) {
+        queue.async {
+            if operation == "close",tab.browserSession != self.chromeSession() {
+                DispatchQueue.main.async { completion(.failure(.closed)) };return
+            }
+            let result:Result<WorkspaceReply,BrowserFailure>
+            do {
+                let identifiers = String(decoding:try JSONEncoder().encode(["windowID":tab.windowID,"tabID":tab.tabID,"url":tab.url]),as:UTF8.self)
+                let script = try self.script("chrome-"+operation+".js").replacingOccurrences(of:"TARGET_IDENTIFIERS",with:identifiers)
+                let reply = try JSONDecoder().decode(WorkspaceReply.self,from:self.execute(script,timeout:10))
+                if reply.status == "error" || reply.status == "notRunning" { result = .failure(self.failure(reply.status == "notRunning" ? -600 : reply.errorCode)) }
+                else { result = .success(reply) }
+            } catch let error as BrowserFailure { result = .failure(error) }
+            catch { result = .failure(self.failure(nil)) }
+            DispatchQueue.main.async { completion(result) }
+        }
+    }
     private func script(_ name:String) throws -> String {
         try String(contentsOf:AppResources.url(name),encoding:.utf8).replacingOccurrences(of:"com.google.Chrome",with:browser.bundleID)
     }

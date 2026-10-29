@@ -4,7 +4,7 @@ import ServiceManagement
 
 final class SettingsController: NSObject {
     private let window: NSWindow
-    private let petToggle = NSButton(checkboxWithTitle: "显示桌宠", target: nil, action: nil)
+    private let petToggle = NSButton(checkboxWithTitle: "显示桌宠（空闲时静止）", target: nil, action: nil)
     private let loginToggle = NSButton(checkboxWithTitle: "登录时启动 BrowserPet", target: nil, action: nil)
     private let loginStatus = NSTextField(wrappingLabelWithString: "")
     private let keyChoice = NSPopUpButton()
@@ -44,7 +44,7 @@ final class SettingsController: NSObject {
         stack.addArrangedSubview(save)
         feedback.font = .systemFont(ofSize: 11); feedback.textColor = .secondaryLabelColor
         stack.addArrangedSubview(feedback)
-        let privacy = NSTextField(wrappingLabelWithString: "页面标题和网址只在本机内存中处理，退出后清空，无痕窗口默认排除。仅保存桌宠位置、可见性和快捷键偏好。站点使用本地字母标识，不向外部请求图标。")
+        let privacy = NSTextField(wrappingLabelWithString: "搜索索引在本机内存中处理，无痕默认排除。启用项目工作集后，所选/匹配页面的标题、网址、分组和使用时间保存在本机；不读取正文、不上传数据。空闲小猫静止，交互时短暂反馈。")
         privacy.font = .systemFont(ofSize: 11); privacy.textColor = .secondaryLabelColor
         stack.addArrangedSubview(privacy); privacy.widthAnchor.constraint(equalTo: stack.widthAnchor).isActive = true
         let help = NSButton(title: "查看 Chrome 授权说明",target: self,action: #selector(helpPressed)); help.bezelStyle = .rounded

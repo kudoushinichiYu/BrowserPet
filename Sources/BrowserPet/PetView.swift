@@ -9,16 +9,27 @@ final class PetView: NSView {
     private let atlas = PetAtlas(imageURL:AppResources.url("pet-atlas.png"),layoutURL:AppResources.url("pet-atlas-frames.json"))
     private var timer: Timer?
     private var frameIndex = 0
-    private var tick = 0
     private var hover = false
+    private var hoverUntil:TimeInterval = 0
+    private var feedbackUntil:TimeInterval = 0
+    private var lastState:PetAnimation = .idle
+    private var windowObserver:NSObjectProtocol?
+    private var motionObserver:NSObjectProtocol?
     private var dragging = false
     private var dragStart = NSPoint.zero
     private var windowStart = NSPoint.zero
     private var lastX: CGFloat = 0
     private var tracking: NSTrackingArea?
-    var baseState: PetAnimation = .idle { didSet { if oldValue != baseState { frameIndex = 0; needsDisplay = true } } }
+    var baseState: PetAnimation = .idle {
+        didSet {
+            guard oldValue != baseState else { return }
+            feedbackUntil = Date.timeIntervalSinceReferenceDate+Double(atlas.count(row:baseState.rawValue))*0.12
+            updateAnimation();needsDisplay = true
+        }
+    }
+    var interactionActive = false { didSet { if oldValue != interactionActive { updateAnimation() } } }
     private var dragState: PetAnimation = .runningRight
-    var gazePoint: NSPoint? { didSet { needsDisplay = true } }
+    var gazePoint: NSPoint? { didSet { if oldValue != gazePoint { needsDisplay = true } } }
     var onClick: (() -> Void)?
     var onDragStart: (() -> Void)?
     var onDragEnd: (() -> Void)?
@@ -31,19 +42,50 @@ final class PetView: NSView {
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         setAccessibilityLabel("BrowserPet 桌宠，点击搜索已打开的浏览器页面")
-        let animationTimer = Timer(timeInterval: 0.12, repeats: true) { [weak self] _ in
-            guard let self, self.window?.isVisible == true else { return }
-            self.tick += 1
-            let state = self.effectiveState
-            if state == .idle, self.tick % 3 != 0 { return }
-            self.frameIndex += 1; self.needsDisplay = true
-        }
-        timer = animationTimer; RunLoop.main.add(animationTimer,forMode:.common)
+        motionObserver = NSWorkspace.shared.notificationCenter.addObserver(forName:NSWorkspace.accessibilityDisplayOptionsDidChangeNotification,object:nil,queue:.main) { [weak self] _ in self?.updateAnimation() }
     }
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
-    deinit { timer?.invalidate() }
-    private var effectiveState: PetAnimation { dragging ? dragState : hover ? .jumping : baseState }
+    deinit {
+        timer?.invalidate()
+        if let windowObserver { NotificationCenter.default.removeObserver(windowObserver) }
+        if let motionObserver { NSWorkspace.shared.notificationCenter.removeObserver(motionObserver) }
+    }
+    private var effectiveState: PetAnimation { dragging ? dragState : hover && Date.timeIntervalSinceReferenceDate < hoverUntil ? .jumping : baseState }
+    private var shouldAnimate:Bool {
+        guard window?.isVisible == true,!NSWorkspace.shared.accessibilityDisplayShouldReduceMotion else { return false }
+        if dragging || (hover && Date.timeIntervalSinceReferenceDate < hoverUntil) { return true }
+        guard interactionActive else { return false }
+        if baseState == .running || baseState == .jumping || baseState == .runningLeft || baseState == .runningRight { return true }
+        return baseState != .idle && Date.timeIntervalSinceReferenceDate < feedbackUntil
+    }
+    /// Idle has no animation timer. Hover and status feedback play once, then rest.
+    private func updateAnimation() {
+        let state = effectiveState
+        if lastState != state { lastState = state;frameIndex = 0;needsDisplay = true }
+        guard shouldAnimate else {
+            timer?.invalidate();timer = nil
+            if frameIndex != 0 { frameIndex = 0;needsDisplay = true }
+            return
+        }
+        guard timer == nil else { return }
+        let animationTimer = Timer(timeInterval:0.12,repeats:true) { [weak self] _ in
+            guard let self else { return }
+            self.updateAnimation()
+            guard self.timer != nil else { return }
+            self.frameIndex += 1;self.needsDisplay = true
+        }
+        timer = animationTimer;RunLoop.main.add(animationTimer,forMode:.common)
+    }
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        if let windowObserver { NotificationCenter.default.removeObserver(windowObserver);self.windowObserver = nil }
+        if let window {
+            windowObserver = NotificationCenter.default.addObserver(forName:NSWindow.didChangeOcclusionStateNotification,object:window,queue:.main) { [weak self] _ in self?.updateAnimation() }
+        }
+        updateAnimation()
+    }
+    func visibilityChanged() { updateAnimation() }
 
     override func draw(_ dirtyRect: NSRect) {
         let state = effectiveState
@@ -76,8 +118,11 @@ final class PetView: NSView {
         let area = NSTrackingArea(rect: bounds, options: [.mouseEnteredAndExited, .activeAlways], owner: self, userInfo: nil)
         tracking = area; addTrackingArea(area); super.updateTrackingAreas()
     }
-    override func mouseEntered(with event: NSEvent) { hover = true; frameIndex = 0; needsDisplay = true }
-    override func mouseExited(with event: NSEvent) { hover = false; frameIndex = 0; needsDisplay = true }
+    override func mouseEntered(with event: NSEvent) {
+        hover = true;hoverUntil = Date.timeIntervalSinceReferenceDate+Double(atlas.count(row:PetAnimation.jumping.rawValue))*0.12
+        frameIndex = 0;updateAnimation();needsDisplay = true
+    }
+    override func mouseExited(with event: NSEvent) { hover = false;frameIndex = 0;updateAnimation();needsDisplay = true }
     override func mouseDown(with event: NSEvent) {
         dragStart = NSEvent.mouseLocation; lastX = dragStart.x
         windowStart = window?.frame.origin ?? .zero; dragging = false
@@ -95,11 +140,11 @@ final class PetView: NSView {
             origin.x = min(max(origin.x, rect.minX), rect.maxX-window.frame.width)
             origin.y = min(max(origin.y, rect.minY), rect.maxY-window.frame.height)
         }
-        window.setFrameOrigin(origin); needsDisplay = true
+        window.setFrameOrigin(origin);updateAnimation();needsDisplay = true
     }
     override func mouseUp(with event: NSEvent) {
         if dragging { dragging = false; onDragEnd?() } else { onClick?() }
-        frameIndex = 0; needsDisplay = true
+        hoverUntil = 0;frameIndex = 0;updateAnimation();needsDisplay = true
     }
     override func menu(for event: NSEvent) -> NSMenu? { makeMenu?() }
     override func accessibilityPerformPress() -> Bool { onClick?(); return true }

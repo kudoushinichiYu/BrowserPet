@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "BrowserPet Safari 页面助手",
-  "version": "0.3.1",
-  "description": "在本机汇总普通窗口的标题和网址，并按你的选择切回原标签页。",
+  "version": "0.4.0",
+  "description": "在本机汇总普通窗口的标题和网址，按你的选择切换、归档关闭或恢复页面。",
   "permissions": ["tabs", "storage", "http://*/*", "https://*/*"],
   "incognito": "not_allowed",
   "background": {"scripts": ["config.js", "protocol.js", "background.js"], "persistent": true},

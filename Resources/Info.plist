@@ -7,10 +7,10 @@
 <key>CFBundleDisplayName</key><string>BrowserPet</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleIconFile</key><string>AppIcon.icns</string>
-  <key>CFBundleShortVersionString</key><string>0.3.3</string>
-  <key>CFBundleVersion</key><string>7</string>
+  <key>CFBundleShortVersionString</key><string>0.4.0</string>
+  <key>CFBundleVersion</key><string>8</string>
 <key>LSMinimumSystemVersion</key><string>13.0</string>
 <key>LSUIElement</key><true/>
 <key>NSHighResolutionCapable</key><true/>
-<key>NSAppleEventsUsageDescription</key><string>BrowserPet 需要读取 Chrome 和 Edge 普通窗口中已打开页面的标题和网址，并在你选择后切换到原标签页。数据仅在本机内存中处理，隐私窗口排除。Safari 使用本机配套助手。</string>
+<key>NSAppleEventsUsageDescription</key><string>BrowserPet 需要读取 Chrome 和 Edge 普通窗口中已打开页面的标题和网址，并按你的选择切换、归档关闭或恢复页面。创建项目后相关资料和使用时间保存在本机，无痕排除。Safari 使用本机配套助手。</string>
 </dict></plist>

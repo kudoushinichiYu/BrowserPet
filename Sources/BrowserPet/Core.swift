@@ -17,6 +17,7 @@ struct BrowserTab: Codable, Equatable, Identifiable {
     var isActive: Bool
     var browserSession: String? = nil
     var nativeGroup: NativeTabGroup? = nil
+    var pinned:Bool? = nil
     var id: String { "\(browser):\(windowID):\(tabID)" }
     var windowKey:String { "\(browser):\(windowID)" }
     var browserName:String { BrowserKind(rawValue:browser)?.name ?? browser }
@@ -55,6 +56,95 @@ struct TabGroup: Equatable {
 }
 
 enum SearchEngine {
+    private struct MatchRank:Comparable {
+        var tier:Int
+        var cost:Int = 0
+        static func < (a:Self,b:Self) -> Bool { a.tier == b.tier ? a.cost < b.cost : a.tier < b.tier }
+    }
+    private final class Phonetics:NSObject {
+        let full:String,initials:String
+        init(_ title:String) {
+            let romanized = (title.applyingTransform(.toLatin,reverse:false) ?? title)
+                .folding(options:[.caseInsensitive,.diacriticInsensitive],locale:Locale(identifier:"en_US_POSIX"))
+            let words = romanized.split { !$0.isLetter && !$0.isNumber }
+            full = words.joined();initials = String(words.compactMap(\.first))
+        }
+    }
+    private static let phonetics:NSCache<NSString,Phonetics> = {
+        let cache = NSCache<NSString,Phonetics>();cache.countLimit = 4096;cache.totalCostLimit = 4*1024*1024;return cache
+    }()
+    private static func phonetic(_ title:String) -> Phonetics? {
+        guard title.unicodeScalars.contains(where:{ (0x3400...0x9fff).contains($0.value) || (0x20000...0x323af).contains($0.value) }) else { return nil }
+        let key = title as NSString
+        if let cached = phonetics.object(forKey:key) { return cached }
+        let result = Phonetics(String(title.prefix(1024)))
+        phonetics.setObject(result,forKey:key,cost:(title.utf8.count+result.full.utf8.count+result.initials.utf8.count)*2)
+        return result
+    }
+    /// A bounded ordered-character match; short Latin abbreviations must start a word.
+    private static func subsequenceCost(_ query:String,in source:String,wordStart:Bool = true) -> Int? {
+        let needle = Array(query),text = Array(source.prefix(1024))
+        guard needle.count >= 2,needle.count <= 48,needle.allSatisfy({ $0.isLetter || $0.isNumber }),needle.contains(where:{$0.isLetter}),text.count >= needle.count else { return nil }
+        let latin = query.utf8.allSatisfy { $0 < 128 }
+        let span = latin ? (needle.count == 2 ? 4 : needle.count == 3 ? 8 : needle.count*3) : needle.count*2+2
+        var best:Int?
+        for start in text.indices where text[start] == needle[0] {
+            if wordStart && latin && needle.count <= 3 && start > 0 && (text[start-1].isLetter || text[start-1].isNumber) { continue }
+            var matched = 1,end = start
+            while matched < needle.count && end+1 < text.count && end+1 < start+span {
+                end += 1
+                if text[end] == needle[matched] { matched += 1 }
+            }
+            if matched == needle.count {
+                let cost = (end-start+1-needle.count)*2+min(start,24)
+                if best == nil || cost < best! { best = cost }
+            }
+        }
+        return best
+    }
+    /// Banded optimal-string-alignment distance, including adjacent transpositions.
+    private static func typoCost(_ query:String,_ candidate:String,limit:Int) -> Int? {
+        let a = Array(query.utf8),b = Array(candidate.utf8),infinity = limit+1
+        guard abs(a.count-b.count) <= limit,!a.isEmpty,!b.isEmpty,b.count <= 64 else { return nil }
+        var previous = Array(0...b.count),beforePrevious = previous
+        for i in 1...a.count {
+            var current = [Int](repeating:infinity,count:b.count+1);current[0] = i
+            let lower = max(1,i-limit),upper = min(b.count,i+limit)
+            guard lower <= upper else { return nil }
+            for j in lower...upper {
+                current[j] = min(previous[j]+1,current[j-1]+1,previous[j-1]+(a[i-1] == b[j-1] ? 0 : 1))
+                if i > 1,j > 1,a[i-1] == b[j-2],a[i-2] == b[j-1] { current[j] = min(current[j],beforePrevious[j-2]+1) }
+            }
+            if current.min()! > limit { return nil }
+            beforePrevious = previous;previous = current
+        }
+        return previous[b.count] <= limit ? previous[b.count] : nil
+    }
+    private static func fuzzy(_ word:String,title:String,url:String,browser:String) -> MatchRank? {
+        var best:MatchRank?
+        func consider(_ rank:MatchRank) { if best == nil || rank < best! { best = rank } }
+        if let cost = subsequenceCost(word,in:title) { consider(.init(tier:4,cost:cost+12)) }
+        let titleWords = title.split { !$0.isLetter && !$0.isNumber }.prefix(100).map(String.init)
+        let initials = String(titleWords.compactMap(\.first))
+        if word.count >= 2,word.count <= 48,initials.contains(word) { consider(.init(tier:4,cost:10)) }
+        let ascii = word.utf8.allSatisfy { $0 < 128 }
+        if ascii,word.count >= 2,word.count <= 48,word.contains(where:{$0.isLetter}),let pinyin = phonetic(title) {
+            if pinyin.full.contains(word) { consider(.init(tier:4,cost:6)) }
+            if pinyin.initials.contains(word) { consider(.init(tier:4,cost:8)) }
+            if let cost = subsequenceCost(word,in:pinyin.initials,wordStart:false) { consider(.init(tier:4,cost:cost+16)) }
+        }
+        if best != nil { return best }
+        // Do not fuzz numeric IDs, one-character input or arbitrary URL query strings.
+        guard ascii,word.utf8.count >= 4,word.utf8.count <= 48,word.contains(where:{$0.isLetter}),
+              word.allSatisfy({ $0.isLetter || $0.isNumber || $0 == "." || $0 == "-" }) else { return nil }
+        let limit = word.count >= 8 ? 2 : 1
+        let host = URLComponents(string:url)?.host ?? ""
+        let candidates = titleWords+host.split(separator:".").map(String.init)+[host,browser]
+        for candidate in candidates where candidate.utf8.allSatisfy({$0 < 128}) {
+            if let cost = typoCost(word,candidate,limit:limit) { consider(.init(tier:5,cost:cost*10)) }
+        }
+        return best
+    }
     static func normalized(_ value: String) -> String {
         value.folding(options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive], locale: Locale(identifier: "en_US_POSIX"))
     }
@@ -79,17 +169,24 @@ enum SearchEngine {
 
     static func groups(tabs: [BrowserTab], query: String, currentWindowID: String?, mode: GroupingMode = .site) -> [TabGroup] {
         let words = normalized(query).split(whereSeparator: { $0.isWhitespace }).map(String.init)
-        func rank(_ tab: BrowserTab) -> Int? {
-            guard !words.isEmpty else { return 0 }
+        func rank(_ tab: BrowserTab) -> MatchRank? {
+            guard !words.isEmpty else { return .init(tier:0) }
             let title = normalized(tab.displayTitle), url = normalized(tab.url)
             let browser = normalized(tab.browserName)
-            guard words.allSatisfy({ title.contains($0) || url.contains($0) || browser.contains($0) }) else { return nil }
-            if title == words.joined(separator: " ") || title == words.joined() { return 0 }
-            if words.allSatisfy({ title.contains($0) }) { return 1 }
-            if words.allSatisfy({ url.contains($0) }) { return 2 }
-            return 3
+            if words.allSatisfy({ title.contains($0) || url.contains($0) || browser.contains($0) }) {
+                if title == words.joined(separator: " ") || title == words.joined() { return .init(tier:0) }
+                if words.allSatisfy({ title.contains($0) }) { return .init(tier:1) }
+                if words.allSatisfy({ url.contains($0) }) { return .init(tier:2) }
+                return .init(tier:3)
+            }
+            var result = MatchRank(tier:4)
+            for word in words where !title.contains(word) && !url.contains(word) && !browser.contains(word) {
+                guard let match = fuzzy(word,title:title,url:url,browser:browser) else { return nil }
+                result.tier = max(result.tier,match.tier);result.cost += match.cost
+            }
+            return result
         }
-        let ranked = tabs.compactMap { tab -> (BrowserTab, Int)? in
+        let ranked = tabs.compactMap { tab -> (BrowserTab, MatchRank)? in
             guard let score = rank(tab) else { return nil }; return (tab, score)
         }
         func groupKey(_ tab: BrowserTab) -> String {
@@ -102,7 +199,7 @@ enum SearchEngine {
             }
         }
         let buckets = Dictionary(grouping: ranked, by: { groupKey($0.0) })
-        func precedes(_ a: (BrowserTab, Int), _ b: (BrowserTab, Int)) -> Bool {
+        func precedes(_ a: (BrowserTab, MatchRank), _ b: (BrowserTab, MatchRank)) -> Bool {
             if a.1 != b.1 { return a.1 < b.1 }
             func current(_ tab:BrowserTab) -> Bool { tab.windowKey == currentWindowID || (tab.browser == "chrome" && tab.windowID == currentWindowID) }
             let ac = current(a.0), bc = current(b.0)

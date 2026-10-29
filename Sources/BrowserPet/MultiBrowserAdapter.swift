@@ -49,4 +49,13 @@ final class MultiBrowserAdapter: BrowserAdapter {
         case nil:completion(.failure(.closed))
         }
     }
+    private func source(_ tab:BrowserTab) -> BrowserAdapter? {
+        switch BrowserKind(rawValue:tab.browser) { case .chrome:return chrome;case .edge:return edge;case .safari:return safari;case nil:return nil }
+    }
+    func close(_ tab:BrowserTab,completion:@escaping (Result<Void,BrowserFailure>)->Void) {
+        guard let adapter = source(tab) else { completion(.failure(.closed));return };adapter.close(tab,completion:completion)
+    }
+    func reopen(_ tab:BrowserTab,completion:@escaping (Result<BrowserTab,BrowserFailure>)->Void) {
+        guard let adapter = source(tab) else { completion(.failure(.closed));return };adapter.reopen(tab,completion:completion)
+    }
 }

@@ -104,6 +104,7 @@ final class SearchController: NSObject,NSTableViewDataSource,NSTableViewDelegate
     var onPermissionHelp: (()->Void)?
     var onGroupSetup: (()->Void)?
     var onSafariSetup: (()->Void)?
+    var onWorkspaces:(()->Void)?
     var onCaretChanged: ((NSPoint?)->Void)?
 
     init(isDemo:Bool,table:NSTableView = NSTableView()) {
@@ -126,13 +127,16 @@ final class SearchController: NSObject,NSTableViewDataSource,NSTableViewDelegate
             stack.topAnchor.constraint(equalTo:effect.topAnchor,constant:12),stack.bottomAnchor.constraint(equalTo:effect.bottomAnchor,constant:-10)
         ])
         let searchRow = NSStackView(); searchRow.orientation = .horizontal; searchRow.alignment = .centerY; searchRow.spacing = 6
-        searchField.placeholderString = isDemo ? "搜索示例页面…" : "搜索已打开的页面…"
+        searchField.placeholderString = isDemo ? "搜索示例页面…" : "搜索页面、拼音或首字母…"
+        searchField.toolTip = "精确匹配优先；支持顺序缩写、中文拼音/首字母和英文拼写容错。例如 xmzb → 项目周报、githbu → GitHub。多词仍需全部命中。"
         searchField.controlSize = .regular; searchField.font = .systemFont(ofSize:14); searchField.focusRingType = .none
         searchField.sendsSearchStringImmediately = true; searchField.sendsWholeSearchString = false; searchField.delegate = self
         searchField.setAccessibilityLabel("搜索 Chrome、Safari 和 Edge 已打开的页面")
         let refresh = NSButton(image:NSImage(systemSymbolName:"arrow.clockwise",accessibilityDescription:"刷新页面列表")!,target:self,action:#selector(refreshPressed))
         refresh.isBordered = false; refresh.toolTip = "刷新页面列表"
-        searchRow.addArrangedSubview(searchField); searchRow.addArrangedSubview(refresh)
+        let workspaces = NSButton(image:NSImage(systemSymbolName:"archivebox",accessibilityDescription:"项目工作集与清理")!,target:self,action:#selector(workspacesPressed))
+        workspaces.isBordered = false;workspaces.toolTip = "保存项目、归档关闭与恢复页面";workspaces.widthAnchor.constraint(equalToConstant:24).isActive = true
+        searchRow.addArrangedSubview(searchField);searchRow.addArrangedSubview(workspaces);searchRow.addArrangedSubview(refresh)
         stack.addArrangedSubview(searchRow); searchRow.widthAnchor.constraint(equalTo:stack.widthAnchor).isActive = true
         searchField.heightAnchor.constraint(equalToConstant:32).isActive = true
         refresh.widthAnchor.constraint(equalToConstant:24).isActive = true
@@ -209,7 +213,7 @@ final class SearchController: NSObject,NSTableViewDataSource,NSTableViewDelegate
         let canonical = tabs.sorted { $0.id < $1.id }
         guard allTabs != canonical || self.currentWindowID != currentWindowID else { return }
         allTabs = canonical; self.currentWindowID = currentWindowID; rebuild(preservingViewport:true)
-        summary.toolTip = "隐私窗口排除；Chrome、Safari、Edge 索引仅存于本机内存。"
+        summary.toolTip = "隐私窗口排除；搜索索引在内存。启用项目工作集后，所选/匹配页面的资料和使用时间保存在本机。"
     }
     private func rebuild(preservingViewport:Bool = false) {
         let selectedID = selectedTab?.id
@@ -334,5 +338,6 @@ final class SearchController: NSObject,NSTableViewDataSource,NSTableViewDelegate
     @objc private func permissionPressed() { onPermissionHelp?() }
     @objc private func groupSetupPressed() { onGroupSetup?() }
     @objc private func safariSetupPressed() { onSafariSetup?() }
+    @objc private func workspacesPressed() { onWorkspaces?() }
     @objc private func browserFilterChanged() { rebuild() }
 }

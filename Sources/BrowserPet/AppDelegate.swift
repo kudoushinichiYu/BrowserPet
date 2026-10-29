@@ -28,6 +28,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let safariAdapter = SafariAdapter()
     private var safariLoopback:SafariLoopback?
     private var safariObserver:NSObjectProtocol?
+    private var workspaces:WorkspaceController?
+    private var workspaceError:Error?
+    private var activityTimer:Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -48,6 +51,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         search.onPermissionHelp = { [weak self] in self?.permissionHelp() }
         search.onGroupSetup = { [weak self] in self?.groupSetup() }
         search.onSafariSetup = { [weak self] in self?.safariSetup() }
+        search.onWorkspaces = { [weak self] in self?.showWorkspaces() }
         groupBridge.onMessage = { [weak self] message in
             DispatchQueue.main.async {
                 guard let self else { return }
@@ -62,6 +66,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hotKey.onPressed = { [weak self] in self?.toggleSearch() }
         initialHotkeyError = hotKey.register(.saved())
         setupStatusItem()
+        if !isDemo { setupWorkspaces() }
         localClickMonitor = NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown,.rightMouseDown]) { [weak self] event in
             guard let self, self.search.panel.isVisible else { return event }
             if event.window !== self.search.panel && event.window !== self.petPanel { self.closeSearch(restoreFocus: false) }
@@ -91,6 +96,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         clampPetPosition()
         if defaults.object(forKey: "pet.visible") == nil || defaults.bool(forKey: "pet.visible") { petPanel.orderFrontRegardless() }
+        petView.visibilityChanged()
     }
     private func setupStatusItem() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
@@ -104,6 +110,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let item = NSMenuItem(title: title,action: action,keyEquivalent: ""); item.target = self; menu.addItem(item)
         }
         add(isDemo ? "搜索页面（演示）" : "搜索页面",#selector(searchPressed))
+        add("项目工作集与清理…",#selector(showWorkspaces))
         let shortcut = NSMenuItem(title: initialHotkeyError == noErr ? "快捷键：\((hotKey.current ?? .saved()).label)" : "快捷键注册失败，请在设置中更换",action: nil,keyEquivalent: "")
         shortcut.isEnabled = false; menu.addItem(shortcut)
         add(petPanel.isVisible ? "隐藏桌宠" : "显示桌宠",#selector(togglePet))
@@ -116,6 +123,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     @objc private func togglePet() { setPetVisible(!petPanel.isVisible) }
     private func setPetVisible(_ visible: Bool) {
         if visible { clampPetPosition(); petPanel.orderFrontRegardless() } else { petPanel.orderOut(nil) }
+        petView.visibilityChanged()
         UserDefaults.standard.set(visible,forKey: "pet.visible")
     }
     @objc private func showSettings() {
@@ -123,6 +131,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         settings.show(petVisible: petPanel.isVisible,shortcut: hotKey.current ?? .saved())
     }
     @objc private func helpPressed() { permissionHelp() }
+    private func setupWorkspaces() {
+        do {
+            let controller = WorkspaceController(store:try WorkspaceStore(),adapter:adapter)
+            controller.onRefresh = { [weak self] in self?.refresh(manual:true,background:true) }
+            controller.onChanged = { [weak self] in self?.configureActivityTracking() }
+            workspaces = controller;configureActivityTracking()
+        } catch { workspaceError = error }
+    }
+    private func configureActivityTracking() {
+        guard let workspaces,!workspaces.store.projects.isEmpty else { activityTimer?.invalidate();activityTimer = nil;return }
+        if activityTimer == nil {
+            let timer = Timer(timeInterval:15,repeats:true) { [weak self] _ in self?.refresh(manual:false,background:true) }
+            RunLoop.main.add(timer,forMode:.common);activityTimer = timer
+        }
+    }
+    @objc private func showWorkspaces() {
+        closeSearch(restoreFocus:false)
+        if let workspaces { workspaces.show() }
+        else { showSetupError(workspaceError?.localizedDescription ?? "演示模式不记录真实工作集，请从正常模式打开。") }
+    }
     @objc private func quit() { NSApp.terminate(nil) }
     private func toggleSearch() {
         if search.panel.isVisible { closeSearch(restoreFocus: true) } else { openSearch() }
@@ -133,6 +161,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             (adapter as? MultiBrowserAdapter)?.preferredBrowser = browser
         }
         positionSearch()
+        petView.interactionActive = true
         search.focus()
         outsideMonitor = outsideMonitor ?? NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown,.rightMouseDown]) { [weak self] _ in
             DispatchQueue.main.async { self?.closeSearch(restoreFocus: false) }
@@ -143,7 +172,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
     private func closeSearch(restoreFocus: Bool) {
         guard search != nil else { return }
-        search.suspendHover(); search.panel.orderOut(nil); petView.gazePoint = nil
+        search.suspendHover();search.panel.orderOut(nil);petView.gazePoint = nil;petView.interactionActive = false
         pendingActivation = nil
         refreshTimer?.invalidate(); refreshTimer = nil
         loadingHint?.cancel(); loadingHint = nil
@@ -166,9 +195,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         y = min(max(y,usable.minY),usable.maxY-size.height)
         search.panel.setFrame(NSRect(x: x,y: y,width: size.width,height: size.height),display: true)
     }
-    private func refresh(manual: Bool) {
+    private func refresh(manual: Bool,background:Bool = false) {
         updateNativeGroups()
-        guard search.panel.isVisible, !scanning, !switching, manual || autoRefresh else { return }
+        guard search.panel.isVisible || background, !scanning, !switching,workspaces?.isBusy != true, manual || autoRefresh || background else { return }
+        if let browser = BrowserKind.allCases.first(where:{ $0.bundleID == NSWorkspace.shared.frontmostApplication?.bundleIdentifier }) {
+            (adapter as? MultiBrowserAdapter)?.preferredBrowser = browser
+        }
         if manual { (adapter as? MultiBrowserAdapter)?.retryPermissions();autoRefresh = true; search.showMessage(nil); petView.baseState = .idle }
         scanning = true; generation += 1
         let token = generation
@@ -193,6 +225,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     }
                     snapshot.tabs[index].windowNumber = self.windowNumbers[id]!
                 }
+                let native = self.groupRepository.snapshot().tabs
+                for index in snapshot.tabs.indices { snapshot.tabs[index].nativeGroup = native[snapshot.tabs[index].id] ?? snapshot.tabs[index].nativeGroup }
+                let foreground = BrowserKind.allCases.first { $0.bundleID == NSWorkspace.shared.frontmostApplication?.bundleIdentifier }?.rawValue
+                self.workspaces?.update(snapshot.tabs,foregroundBrowser:foreground)
                 self.search.setTabs(snapshot.tabs,currentWindowID: snapshot.currentWindowID,excludedCount: snapshot.excludedPrivateWindowCount)
                 let notices = snapshot.notices ?? []
                 self.search.setSafariConnected(!notices.contains { $0.browser == "safari" })
@@ -228,6 +264,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let self else { return }
             switch result {
             case .success:
+                self.workspaces?.markUsed(tab)
                 let target = BrowserKind(rawValue:tab.browser)?.bundleID
                 if tab.browser == "safari",let target {
                     NSRunningApplication.runningApplications(withBundleIdentifier:target).first?.activate(options:[])
@@ -264,7 +301,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func safariSetup() {
         let alert = NSAlert()
         alert.messageText = "连接 Safari 页面助手"
-        alert.informativeText = "点击下方按钮，会在本用户的“资源库/Application Support/BrowserPet/SafariHelper”生成专用配对助手并打开文件夹。\n\n在 Safari 设置 → 开发者 → 添加临时扩展中选择该文件夹，并授予网站访问以读取标题和网址。不要开启隐私浏览权限。\n\n助手不注入网页，只与 127.0.0.1 的 BrowserPet 通信，索引仅在内存中。临时扩展退出 Safari 或 24 小时后需重新加载；长期安装版需要 Apple 签名和打包。"
+        alert.informativeText = "点击下方按钮，会在本用户的“资源库/Application Support/BrowserPet/SafariHelper”生成或更新专用配对助手并打开文件夹。\n\n在 Safari 设置 → 开发者 → 添加临时扩展中选择该文件夹；已加载的助手需重载才能启用工作集关闭/恢复。授予网站访问以读取标题和网址，不要开启隐私浏览权限。\n\n助手不注入网页，只与 127.0.0.1 通信；启用项目后可在本机保存所选/匹配页面的标题、网址、分组和使用时间。临时扩展退出 Safari 或 24 小时后需重新加载。"
         alert.addButton(withTitle:"打开助手文件夹");alert.addButton(withTitle:"稍后连接")
         if alert.runModal() == .alertFirstButtonReturn,let resources = Bundle.main.resourceURL {
             do {
@@ -311,6 +348,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         safariLoopback?.stop()
         if let safariObserver { NSWorkspace.shared.notificationCenter.removeObserver(safariObserver) }
         refreshTimer?.invalidate(); if let outsideMonitor { NSEvent.removeMonitor(outsideMonitor) }
+        activityTimer?.invalidate()
         if let localClickMonitor { NSEvent.removeMonitor(localClickMonitor) }
     }
 }

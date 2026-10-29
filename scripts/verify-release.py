@@ -12,6 +12,7 @@ resources = app / 'Contents/Resources'
 info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
 expected = plistlib.loads((root / 'Resources/Info.plist').read_bytes())
 assert info['CFBundleShortVersionString'] == expected['CFBundleShortVersionString']
+assert info['CFBundleVersion'] == expected['CFBundleVersion']
 assert info['LSMinimumSystemVersion'] == '13.0'
 assert info['CFBundleIconFile'] == 'AppIcon.icns'
 icon = resources / info['CFBundleIconFile']
@@ -26,7 +27,7 @@ for folder, names in [('safari-tabs', ['background.js', 'protocol.js', 'manifest
     for name in names:
         assert (resources / folder / name).read_bytes() == (root / 'extensions' / folder / name).read_bytes(), name
 assert (resources / 'group-native-host').stat().st_mode & 0o111
-for name in ['pet-atlas.png', 'pet-atlas-frames.json', 'chrome-scan.js', 'chrome-activate.js']:
+for name in ['pet-atlas.png', 'pet-atlas-frames.json', 'chrome-scan.js', 'chrome-activate.js', 'chrome-close.js', 'chrome-reopen.js']:
     assert (resources / name).read_bytes() == (root / 'Resources' / name).read_bytes(), name
 # Test secret bytes internally; never print them or place them in audit output.
 forbidden = [str(root).encode(), str(Path.home()).encode()]
@@ -35,6 +36,7 @@ for config in [root / '.build/safari-pairing.json',
     if config.exists():
         forbidden.append(json.loads(config.read_text())['token'].encode())
 files = [p for p in app.rglob('*') if p.is_file()]
+assert not any(p.name in {'workspaces.json','test-project-completed.json'} for p in files), 'User workspace data in release'
 for file in files:
     data = file.read_bytes()
     assert all(value not in data for value in forbidden), f'Local path or secret in {file.relative_to(app)}'

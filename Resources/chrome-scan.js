@@ -30,7 +30,7 @@
                         }
                         result.tabs.push({browser:'chrome',windowID:windowID,tabID:String(metadata.id),
                             title:String(metadata.title || ''),url:String(metadata.url || metadata.URL || ''),windowTitle:name,
-                            windowNumber:i+1,isActive:i===0 && j+1===active});
+                            windowNumber:i+1,isActive:i===0 && j+1===active,pinned:typeof metadata.pinned==='boolean'?metadata.pinned:null});
                     } catch(e) { if (!missing(e)) throw e; result.skippedWindowCount++; }
                 }
             } catch(e) {
