@@ -1,0 +1,103 @@
+Sources/BrowserPet/Core.swift
+  s_f5bf42c83024ee::t_f4b5473c42252f 127-129
+  s_f5bf42c83024ee::t_beac1183897483 20
+  s_f5bf42c83024ee::t_14c8a7e8094c1f 59-126,130-147,172-173,176-187,189,202
+Sources/BrowserPet/MultiBrowserAdapter.swift
+  s_f5bf42c83024ee::t_beac1183897483 52-60
+Sources/BrowserPet/AppDelegate.swift
+  s_f5bf42c83024ee::t_e9a9fe74ac74a1 31-33,54,69,113,134-153,198,200-203,228-231,267,351
+  s_f5bf42c83024ee::t_79a95311a6d3c2 99,126,164,175
+  s_f5bf42c83024ee::t_06a56a3e04eff7 304
+Tests/workspace-scripts.test.js
+  s_f5bf42c83024ee::t_60e402e91924cb 32,34,36-46
+  s_f5bf42c83024ee::t_f2c0a984e084ad 1-31,33,35,47-76
+README.md
+  s_f5bf42c83024ee::t_5c1d295a1d67d9 29,73
+  s_f5bf42c83024ee::t_f4b5473c42252f 59-60
+  s_f5bf42c83024ee::t_823584793c829d 7,19-20,61,69,81,114
+  s_f5bf42c83024ee::t_06a56a3e04eff7 67-68,70-72,74-80,82-83
+extensions/safari-tabs/manifest.json
+  s_f5bf42c83024ee::t_bb4a1689df8e93 4-5
+docs/INSTALL.zh-CN.txt
+  s_f5bf42c83024ee::t_823584793c829d 1,8-20,23,30,34-35
+Tests/FuzzySearchChecks.swift
+  s_f5bf42c83024ee::t_155d0b87a01f2d 1-17,20-52
+  s_f5bf42c83024ee::t_f4b5473c42252f 18-19
+Tests/WorkspaceChecks.swift
+  s_f5bf42c83024ee::t_bd81ccb734a8ed 32,39
+  s_f5bf42c83024ee::t_2ce18cd985af6d 50-53
+  s_f5bf42c83024ee::t_37db0c954da10f 75-76
+  s_f5bf42c83024ee::t_2afc3db8b7cf06 112-124
+  s_f5bf42c83024ee::t_f30153651c09c3 1-31,33-38,40-49,54-74,77-111,125-129
+Resources/Info.plist
+  s_f5bf42c83024ee::t_bb4a1689df8e93 10-11,15
+scripts/verify-release.py
+  s_f5bf42c83024ee::t_bb4a1689df8e93 15,30,39
+extensions/safari-tabs/protocol.js
+  s_f5bf42c83024ee::t_a6195f47e03aff 16,20,38-76
+extensions/safari-tabs/background.js
+  s_f5bf42c83024ee::t_a6195f47e03aff 26
+Sources/BrowserPet/WorkspaceStore.swift
+  s_f5bf42c83024ee::t_06a56a3e04eff7 125-128
+  s_f5bf42c83024ee::t_e9a9fe74ac74a1 158-163
+  s_f5bf42c83024ee::t_2ce18cd985af6d 20-21,142-143,145-147,149
+  s_f5bf42c83024ee::t_beac1183897483 3,121,129,131
+  s_f5bf42c83024ee::t_f30153651c09c3 88,90-91
+  s_f5bf42c83024ee::t_37db0c954da10f 120,124,156
+  s_f5bf42c83024ee::t_51600f94967fa2 1-2,4-19,22-87,89,92-119,122-123,130,132-141,144,148,150-155,157,164-177
+Resources/chrome-close.js
+  s_f5bf42c83024ee::t_1a89f00f8f8fea 1-26
+Sources/BrowserPet/WorkspaceController.swift
+  s_f5bf42c83024ee::t_07cf3ef0729b3d 99-100,140-145
+  s_f5bf42c83024ee::t_61c962cd8e67ca 69,185,190-192,198,206
+  s_f5bf42c83024ee::t_4d2105225e05b2 212,223
+  s_f5bf42c83024ee::t_24ef02d03dac9a 1-21,23-24,28-68,70-78,80-89,91-94,96-98,101-109,111-118,128-139,147-170,172-174,177-181,183-184,186-189,193-197,199-205,207-211,213-214,216-222,224,226-229
+  s_f5bf42c83024ee::t_bd81ccb734a8ed 22,25-27,79,90,95,110,119-127,146,171,175-176,182,215,225
+Sources/BrowserPet/SearchPanel.swift
+  s_f5bf42c83024ee::t_e9a9fe74ac74a1 107,137-139,216,341
+  s_f5bf42c83024ee::t_f4b5473c42252f 130-131
+Resources/chrome-reopen.js
+  s_f5bf42c83024ee::t_1a89f00f8f8fea 1-13,29-30
+  s_f5bf42c83024ee::t_4d2105225e05b2 14-28
+Sources/BrowserPet/SafariAdapter.swift
+  s_f5bf42c83024ee::t_a6195f47e03aff 5-6,14,21-22,26,31,48,51-58,77,84-90,92-93,96,99-105
+docs/VALIDATION.md
+  s_f5bf42c83024ee::t_0ce9b70b6aee80 1,3,5-17,19,21,23,25-29,31,33,35-50
+  s_f5bf42c83024ee::t_39a6cf02396074 32,34
+Sources/BrowserPet/PetView.swift
+  s_f5bf42c83024ee::t_79a95311a6d3c2 13-17,23-30,32,45,49-88,121-125,143,147
+docs/releases/v0.4.0.md
+  s_f5bf42c83024ee::t_823584793c829d 1-25
+Resources/chrome-scan.js
+  s_f5bf42c83024ee::t_beac1183897483 33
+Sources/BrowserPet/SettingsController.swift
+  s_f5bf42c83024ee::t_f4b5473c42252f 7,47
+Sources/BrowserPet/ChromeAdapter.swift
+  s_f5bf42c83024ee::t_2ce18cd985af6d 167-169
+  s_f5bf42c83024ee::t_beac1183897483 6-12,135-151,153-166,170-181
+  s_f5bf42c83024ee::t_4d2105225e05b2 134,152
+Sources/BrowserPet/WorkspaceCoordinator.swift
+  s_f5bf42c83024ee::t_51600f94967fa2 1-27,29-36,38-40,42-46,49-55,57-62
+  s_f5bf42c83024ee::t_f30153651c09c3 28,47-48,56
+  s_f5bf42c83024ee::t_e9a9fe74ac74a1 37,41
+scripts/test.sh
+  s_f5bf42c83024ee::t_d85e67610a5740 8,29-35
+  s_f5bf42c83024ee::t_7518c8581c5c2d 19,27
+  s_f5bf42c83024ee::t_f4b5473c42252f 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.6",
+  "base_commit_sha": "92d87b99040640b2ec3e824f86005160874edacf",
+  "prompts": {},
+  "sessions": {
+    "s_f5bf42c83024ee": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a185b4-19a7-7953-a6da-b3485b25780a",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "KudoushinichiYu <170847496+kudoushinichiYu@users.noreply.github.com>"
+    }
+  }
+}
